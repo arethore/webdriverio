@@ -460,6 +460,10 @@ async function bar() {
         await browser.$('foo').$('bar').$$('loo').selector)
     expectType<WebdriverIO.Browser | WebdriverIO.Element | WebdriverIO.MultiRemoteBrowser>(
         await browser.$('foo').$('bar').$$('loo').parent)
+    expectType<Promise<WebdriverIO.Element>>(browser.$('foo'))
+    expectType<Promise<WebdriverIO.Element[]>>(browser.$$('foo'))
+    expectType<Promise<number>>(
+        browser.$('foo').$('bar').$$('loo').length)
 
     // promise chain API
     expectType<string>(
@@ -496,7 +500,9 @@ async function bar() {
     for await (const el of browser.$$('foo')) {
         expectType<WebdriverIO.Element>(el)
     }
+    expectType<Promise<number>>(browser.$$('foo').length)
     const panels = await browser.$$('foo')
+    expectType<WebdriverIO.ElementArray>(await browser.$$('foo'))
     for (const panel of panels) {
         await expect(panel).toHaveAttr('class', 'false')
     }
@@ -522,6 +528,7 @@ async function bar() {
     // getElement type check
     const singleChainedElement = await browser.$('foo').getElement()
     const singleElement = await singleChainedElement.getElement()
+    expectType<WebdriverIO.Element>(await browser.$('foo'))
     expectType<string>(singleElement.elementId)
     expectType<string>(singleElement.elementId)
     // @ts-expect-error
